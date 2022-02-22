@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.lmartel54</groupId>
+  <artifactId>incubator</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <!-- <name>incubator</name> -->
+  <!-- <url>http://maven.apache.org</url> -->
+
+  <properties>
+    <!-- Logging Frameworks -->
+    <log4j.version>1.2.17</log4j.version>
+    <slf4j.version>1.7.30</slf4j.version>
+    <!-- Java utility classes -->
+    <commons-lang3.version>3.12.0</commons-lang3.version>
+    <commons-io.version>2.6</commons-io.version>
+
+  </properties>
+
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>11</release>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <dependencies>
+
+    <!-- Logging Frameworks -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+
+    <!-- Java utility classes -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
+    <!-- Java utility classes, stream implementations, file filters, file comparators, endian transformation classes, and much more -->
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commons-io.version}</version>
+    </dependency>
+
+  </dependencies>
+
+  <modules>
+    <module>easy-file-organizer</module>
+  </modules>
+
+</project>
