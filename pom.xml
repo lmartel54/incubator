@@ -4,7 +4,6 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.lmartel54</groupId>
-<<<<<<< HEAD
   <artifactId>incubator</artifactId>
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -35,7 +34,6 @@
   </build>
 
   <dependencies>
-
     <!-- Logging Frameworks -->
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -47,7 +45,6 @@
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
     </dependency>
-
     <!-- Java utility classes -->
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -59,49 +56,10 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
-=======
-
-  <artifactId>incubator</artifactId>
-
-  <packaging>pom</packaging>
-
-  <version>1.0-SNAPSHOT</version>
-
-  <name>incubator</name>
-
-  <url>http://maven.apache.org</url>
-
-  <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-  </properties>
-
-  <dependencies>
-
-    <dependency>
-
-      <groupId>junit</groupId>
-
-      <artifactId>junit</artifactId>
-
-      <version>3.8.1</version>
-
-      <scope>test</scope>
-
->>>>>>> bb9a7ff4b306e65ec71cb2351ff9fbd9f8d2aea3
     </dependency>
-
   </dependencies>
 
   <modules>
-<<<<<<< HEAD
     <module>easy-file-organizer</module>
   </modules>
-
-=======
-
-    <module>easy-file-organizer</module>
-
-  </modules>
->>>>>>> bb9a7ff4b306e65ec71cb2351ff9fbd9f8d2aea3
 </project>
