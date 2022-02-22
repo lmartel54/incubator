@@ -1,4 +1,4 @@
-package org.lmartel54.organizer;
+package com.lmartel54.organizer;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -29,9 +29,9 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
-public class EasyFileOrganizer {
+public class FileOrganizer {
 
-	private static final Logger logger = LoggerFactory.getLogger(EasyFileOrganizer.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileOrganizer.class);
 
 	public static void main(String[] args) throws Exception {
 
