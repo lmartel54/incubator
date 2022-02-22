@@ -1,6 +1,6 @@
 package com.lmartel54.easy;
 
-import java.io.DataInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -22,10 +22,10 @@ import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.file.FileTypeDirectory;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -48,7 +48,8 @@ public class FileOrganizer {
 		final AtomicLong moveError = new AtomicLong(0);
 		final AtomicLong unexpectedError = new AtomicLong(0);
 
-		final String root = "/home/user/devbox/projects/test";
+		// final String root = "/home/user/devbox/projects/test";
+		final String root = "C:\\test";
 
 		final List<Path> paths;
 
@@ -64,18 +65,30 @@ public class FileOrganizer {
 			try {
 				logger.info("\n\n@@@ file => {} @@@\n", path.toFile().getName());
 
-				FileType fileType = FileTypeDetector
-						.detectFileType(new DataInputStream(FileUtils.openInputStream(path.toFile())));
-
-				if (fileType == FileType.Jpeg) {
-					System.out.println("JPEG");
-				} else if (fileType == FileType.Png) {
-					System.out.println("PNG");
+				try (final BufferedInputStream inputStream = new BufferedInputStream(FileUtils.openInputStream(path.toFile()))) {
+					final FileType fileType = FileTypeDetector.detectFileType(inputStream);
+					switch(fileType) {
+						case Jpeg:
+							final Metadata metadata2 = JpegMetadataReader.readMetadata(path.toFile());
+							dumpMetada(metadata2);
+							break;
+						default:
+							logger.error("[{}] unsupported file format ! ", fileType);
+							return;
+							// break;
+					}
+					// if (fileType == FileType.Jpeg) {
+					// 	System.out.println("JPEG");
+					// } else if (fileType == FileType.Png) {
+					// 	System.out.println("PNG");
+					// }
+					// else {
+					// 	System.out.println(fileType);
+					// }
 				}
-				else {
-					System.out.println(fileType);
+				if (true) {
+					return;
 				}
-
 				// Extract file metadata
 
 				final Metadata metadata = ImageMetadataReader.readMetadata(path.toFile());
@@ -131,10 +144,10 @@ public class FileOrganizer {
 
 			} catch (final FileAlreadyExistsException e) {
 				moveError.getAndIncrement();
-				logger.error("[MOVE.ERROR] " + path, e);
+				logger.error("[MOVE.ERROR] {}", path, e);
 			} catch (final Exception e) {
 				unexpectedError.getAndIncrement();
-				logger.error("[UNEXPECTED.ERROR] " + path, e);
+				logger.error("[UNEXPECTED.ERROR] {}", path, e);
 			}
 		});
 
