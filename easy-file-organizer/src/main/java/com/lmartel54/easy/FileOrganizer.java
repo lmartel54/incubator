@@ -1,5 +1,6 @@
 package com.lmartel54.easy;
 
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -17,12 +18,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.drew.imaging.FileType;
+import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.file.FileTypeDirectory;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
@@ -43,7 +48,7 @@ public class FileOrganizer {
 		final AtomicLong moveError = new AtomicLong(0);
 		final AtomicLong unexpectedError = new AtomicLong(0);
 
-		final String root = "/home/user/Images";
+		final String root = "/home/user/devbox/projects/test";
 
 		final List<Path> paths;
 
@@ -57,9 +62,25 @@ public class FileOrganizer {
 
 		paths.stream().forEachOrdered(path -> {
 			try {
+				logger.info("\n\n@@@ file => {} @@@\n", path.toFile().getName());
+
+				FileType fileType = FileTypeDetector.detectFileType(FilterInputStream(FileUtils.openInputStream(path.toFile())));
+
+				// if (fileType == FileType.Jpeg) {
+				// 	// ...
+				// } else if (fileType == FileType.Png) {
+				// 	// ...
+
 				// Extract file metadata
 
 				final Metadata metadata = ImageMetadataReader.readMetadata(path.toFile());
+
+				dumpMetada(metadata);
+				if (true) {
+					return;
+				}
+
+				final FileTypeDirectory fileType = metadata.getFirstDirectoryOfType(FileTypeDirectory.class);
 
 				final ExifSubIFDDirectory subIfdDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
 				final Date date = subIfdDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, TimeZone.getTimeZone("CET"));
@@ -126,8 +147,10 @@ public class FileOrganizer {
 		return calendar.get(field);
 	}
 
-	private static void dumpMetada(final Path path) throws ImageProcessingException, IOException {
-		final Metadata metadata = ImageMetadataReader.readMetadata(path.toFile());
-		metadata.getDirectories().forEach(directory -> directory.getTags().forEach(tag -> logger.info(tag.toString())));
+	private static void dumpMetada(final Metadata metadata) throws ImageProcessingException, IOException {
+		metadata.getDirectories().forEach(directory -> {
+			logger.info("====== {} ======", directory.toString());
+			directory.getTags().forEach(tag -> logger.info("{}", tag.toString()));
+		});
 	}
 }
