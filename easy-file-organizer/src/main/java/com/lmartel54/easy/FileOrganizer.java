@@ -1,6 +1,6 @@
 package com.lmartel54.easy;
 
-import java.io.FilterInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -64,12 +64,17 @@ public class FileOrganizer {
 			try {
 				logger.info("\n\n@@@ file => {} @@@\n", path.toFile().getName());
 
-				FileType fileType = FileTypeDetector.detectFileType(FilterInputStream(FileUtils.openInputStream(path.toFile())));
+				FileType fileType = FileTypeDetector
+						.detectFileType(new DataInputStream(FileUtils.openInputStream(path.toFile())));
 
-				// if (fileType == FileType.Jpeg) {
-				// 	// ...
-				// } else if (fileType == FileType.Png) {
-				// 	// ...
+				if (fileType == FileType.Jpeg) {
+					System.out.println("JPEG");
+				} else if (fileType == FileType.Png) {
+					System.out.println("PNG");
+				}
+				else {
+					System.out.println(fileType);
+				}
 
 				// Extract file metadata
 
@@ -80,10 +85,11 @@ public class FileOrganizer {
 					return;
 				}
 
-				final FileTypeDirectory fileType = metadata.getFirstDirectoryOfType(FileTypeDirectory.class);
+				// final FileTypeDirectory fileType = metadata.getFirstDirectoryOfType(FileTypeDirectory.class);
 
 				final ExifSubIFDDirectory subIfdDir = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-				final Date date = subIfdDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL, TimeZone.getTimeZone("CET"));
+				final Date date = subIfdDir.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL,
+						TimeZone.getTimeZone("CET"));
 
 				final ExifIFD0Directory ifd0Dir = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
 				final String manufacturer = StringUtils.trimToEmpty(ifd0Dir.getDescription(ExifIFD0Directory.TAG_MAKE));
@@ -95,7 +101,8 @@ public class FileOrganizer {
 
 				// Manage subdirectory
 
-				final Path workingDirectory = Files.createDirectories(Paths.get(FilenameUtils.concat(root, String.valueOf(parse(date, Calendar.YEAR)))));
+				final Path workingDirectory = Files.createDirectories(
+						Paths.get(FilenameUtils.concat(root, String.valueOf(parse(date, Calendar.YEAR)))));
 
 				// Manage duplicate file
 
@@ -109,9 +116,11 @@ public class FileOrganizer {
 				final String fileUUID = groups.get(0) + groups.get(1);
 
 				try (final Stream<Path> walk = Files.walk(workingDirectory, 1)) {
-					final List<Path> duplicate = walk.filter(file -> file.getFileName().toString().startsWith(fileUUID)).collect(Collectors.toList());
+					final List<Path> duplicate = walk.filter(file -> file.getFileName().toString().startsWith(fileUUID))
+							.collect(Collectors.toList());
 					if (duplicate.size() > 0) {
-						filename = SDF_PATTERN.format(date) + "[PICT" + String.format("%04d", (duplicate.size() + 1)) + "][" + manufacturer + " " + model + "]";
+						filename = SDF_PATTERN.format(date) + "[PICT" + String.format("%04d", (duplicate.size() + 1))
+								+ "][" + manufacturer + " " + model + "]";
 					}
 				}
 
