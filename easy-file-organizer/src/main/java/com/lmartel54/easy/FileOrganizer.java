@@ -16,12 +16,14 @@ import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
+import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.mp4.Mp4MetadataReader;
@@ -37,15 +39,18 @@ import com.lmartel54.easy.metadata.OriginalDate;
 
 public class FileOrganizer {
 
-	private static final boolean DUMP_METADATA = true;
-	private static final String WORKING_FOLDER = "C:\\test\\incubator";
-	// private static final String WORKING_FOLDER = "\\\\home\\photos\\incubator";
+	private static final boolean DUMP_METADATA = false;
+//	private static final String WORKING_FOLDER = "C:\\incubator";
+	private static final String WORKING_FOLDER = "\\\\home\\photos";
 
 	private static final AtomicLong found = new AtomicLong(0);
 	private static final AtomicLong success = new AtomicLong(0);
 	private static final AtomicLong moveError = new AtomicLong(0);
 	private static final AtomicLong unexpectedError = new AtomicLong(0);
 	private static final Logger logger = LoggerFactory.getLogger(FileOrganizer.class);
+
+	private static final String FAKE_DIRECTORY = ""; // "2019";
+	private static final String FAKE_NAME = ""; // "2019-08";
 
 	public static void main(String[] args) throws Exception {
 
@@ -80,11 +85,18 @@ public class FileOrganizer {
 
 				// Manage subdirectory
 
-				final Path workingDirectory = Files.createDirectories(Paths.get(FilenameUtils.concat(WORKING_FOLDER, String.valueOf(parse(date, Calendar.YEAR)))));
+				final Path workingDirectory;
+				if (StringUtils.isNotEmpty(FAKE_DIRECTORY))
+					workingDirectory = Files.createDirectories(Paths.get(FilenameUtils.concat(WORKING_FOLDER, FAKE_DIRECTORY)));
+				else
+					workingDirectory = Files.createDirectories(Paths.get(FilenameUtils.concat(WORKING_FOLDER, String.valueOf(parse(date, Calendar.YEAR)))));
 
 				// Manage duplicate(s) file(s)
-
-				final String fileUUID = OriginalDate.format(date);
+				final String fileUUID;
+				if (StringUtils.isNotEmpty(FAKE_NAME))
+					fileUUID = FAKE_NAME;
+				else
+					fileUUID = OriginalDate.format(date);
 
 				try (final Stream<Path> walk = Files.walk(workingDirectory, 1)) {
 					final List<Path> duplicate = walk.filter(file -> file.getFileName().toString().startsWith(fileUUID)).collect(Collectors.toList());
@@ -142,6 +154,9 @@ public class FileOrganizer {
 				return JpegMetadataReader.readMetadata(path.toFile());
 			case Mp4:
 				return Mp4MetadataReader.readMetadata(path.toFile());
+			case QuickTime:
+//				return QuickTimeMetadataReader.readMetadata(path.toFile());
+				return ImageMetadataReader.readMetadata(path.toFile());
 			default:
 				throw new FileNotFoundException("[" + fileType + "] unsupported file format ! ");
 			}
@@ -159,7 +174,10 @@ public class FileOrganizer {
 
 	private static String getFileName(final Path path, final int count, final Date date, final String device) {
 		final StringBuilder builder = new StringBuilder();
-		builder.append(OriginalDate.format(date));
+		if (StringUtils.isNotEmpty(FAKE_NAME))
+			builder.append(FAKE_NAME);
+		else
+			builder.append(OriginalDate.format(date));
 //		builder.append(" [" + FilenameUtils.removeExtension(path.toFile().getName()) + "]");
 		if (count > 1) {
 			builder.append(" [" + String.format("%02d", count - 1) + "]");

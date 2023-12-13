@@ -19,7 +19,15 @@ import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
+import com.drew.metadata.exif.makernotes.AppleMakernoteDirectory;
+import com.drew.metadata.exif.makernotes.PanasonicMakernoteDirectory;
 import com.drew.metadata.file.FileSystemDirectory;
+import com.drew.metadata.icc.IccDirectory;
+import com.drew.metadata.iptc.IptcDirectory;
+import com.drew.metadata.mov.QuickTimeDirectory;
+import com.drew.metadata.mov.media.QuickTimeSoundDirectory;
+import com.drew.metadata.mov.media.QuickTimeVideoDirectory;
+import com.drew.metadata.mov.metadata.QuickTimeMetadataDirectory;
 import com.drew.metadata.mp4.Mp4Directory;
 import com.drew.metadata.mp4.media.Mp4SoundDirectory;
 import com.drew.metadata.mp4.media.Mp4VideoDirectory;
@@ -47,7 +55,7 @@ public final class OriginalDate {
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME, "[Exif SubIFD] [TAG_DATETIME]"));
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME_ORIGINAL, "[Exif SubIFD] [TAG_DATETIME_ORIGINAL]"));
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME_DIGITIZED, "[Exif SubIFD] [TAG_DATETIME_DIGITIZED]"));
-//		tags.add(new CustomTag(IccDirectory.class, IccDirectory.TAG_PROFILE_DATETIME, "DATE.ICC.PROFILE_DATETIME"));
+		tags.add(new CustomTag(IccDirectory.class, IccDirectory.TAG_PROFILE_DATETIME, "DATE.ICC.PROFILE_DATETIME"));
 		tags.add(new CustomTag(FileSystemDirectory.class, FileSystemDirectory.TAG_FILE_MODIFIED_DATE, "[File] [TAG_FILE_MODIFIED_DATE]"));
 		// [MP4]
 		tags.add(new CustomTag(Mp4Directory.class, Mp4Directory.TAG_CREATION_TIME, "[MP4] [TAG_CREATION_TIME]"));
@@ -56,12 +64,43 @@ public final class OriginalDate {
 		tags.add(new CustomTag(Mp4VideoDirectory.class, Mp4VideoDirectory.TAG_MODIFICATION_TIME, "[MP4 Video] [TAG_MODIFICATION_TIME]"));
 		tags.add(new CustomTag(Mp4SoundDirectory.class, Mp4SoundDirectory.TAG_CREATION_TIME, "[MP4 Sound] [TAG_CREATION_TIME]"));
 		tags.add(new CustomTag(Mp4SoundDirectory.class, Mp4SoundDirectory.TAG_MODIFICATION_TIME, "[MP4 Sound] [TAG_MODIFICATION_TIME]"));
-
+		// [MOV]
+		tags.add(new CustomTag(QuickTimeDirectory.class, QuickTimeDirectory.TAG_CREATION_TIME, "[QuickTime] [TAG_CREATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeDirectory.class, QuickTimeDirectory.TAG_MODIFICATION_TIME, "[QuickTime] [TAG_MODIFICATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeVideoDirectory.class, QuickTimeVideoDirectory.TAG_CREATION_TIME, "[QuickTime Video] [TAG_CREATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeVideoDirectory.class, QuickTimeVideoDirectory.TAG_MODIFICATION_TIME, "[QuickTime Video] [TAG_MODIFICATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeMetadataDirectory.class, 1286, "[QuickTime Metadata] [TAG_CREATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeMetadataDirectory.class, QuickTimeMetadataDirectory.TAG_MODIFICATION_TIME, "[QuickTime Metadata] [TAG_MODIFICATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeMetadataDirectory.class, QuickTimeMetadataDirectory.TAG_CONTENT_IDENTIFIER, "[QuickTime Metadata] [TAG_CONTENT_IDENTIFIER]"));
+		tags.add(new CustomTag(QuickTimeSoundDirectory.class, 20481, "[QuickTime Sound] [TAG_CREATION_TIME]"));
+		tags.add(new CustomTag(QuickTimeSoundDirectory.class, 20482, "[QuickTime Sound] [TAG_MODIFICATION_TIME]"));
+		// [PANASONIC]
+		tags.add(new CustomTag(PanasonicMakernoteDirectory.class, PanasonicMakernoteDirectory.TAG_BABY_AGE, "[Panasonic] [TAG_BABY_AGE]"));
+		tags.add(new CustomTag(PanasonicMakernoteDirectory.class, PanasonicMakernoteDirectory.TAG_BABY_AGE_1, "[Panasonic] [TAG_BABY_AGE_1]"));
+		// [APPLE]
+		tags.add(new CustomTag(AppleMakernoteDirectory.class, 0x002b, "[AppleMakeNote] [[Unknown tag]"));
+		tags.add(new CustomTag(AppleMakernoteDirectory.class, 0x0020, "[AppleMakeNote] [[Unknown tag]"));
+		tags.add(new CustomTag(AppleMakernoteDirectory.class, AppleMakernoteDirectory.TAG_IMAGE_UNIQUE_ID, "[AppleMakeNote] [[TAG_IMAGE_UNIQUE_ID]"));
+		tags.add(new CustomTag(AppleMakernoteDirectory.class, AppleMakernoteDirectory.TAG_CONTENT_IDENTIFIER, "[AppleMakeNote] [[TAG_CONTENT_IDENTIFIER]"));
+		tags.add(new CustomTag(AppleMakernoteDirectory.class, AppleMakernoteDirectory.TAG_BURST_UUID, "[AppleMakeNote] [[TAG_BURST_UUID]"));
+		// [IPTC]
+//		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DATE_CREATED, "[Iptc] [[TAG_DATE_CREATED]"));
+//		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_TIME_CREATED, "[Iptc] [[TAG_TIME_CREATED]"));
+//		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DIGITAL_DATE_CREATED, "[Iptc] [[TAG_DIGITAL_DATE_CREATED]"));
+//		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DIGITAL_TIME_CREATED, "[Iptc] [[TAG_DIGITAL_TIME_CREATED]"));
+		
+		
+		excluded_tags.add(new CustomTag(GpsDirectory.class, GpsDirectory.TAG_DATE_STAMP, "DATE.GPS.STAMP"));
 		excluded_tags.add(new CustomTag(FileSystemDirectory.class, FileSystemDirectory.TAG_FILE_NAME, "DATE.FILE.NAME"));
 		excluded_tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifSubIFDDirectory.TAG_SUBSECOND_TIME, "DATE.DATE.SUBIFD.SUBSECOND_TIME"));
 		excluded_tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifSubIFDDirectory.TAG_SUBSECOND_TIME_ORIGINAL, "DATE.SUBIFD.SUBSECOND_TIME_ORIGINAL"));
 		excluded_tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifSubIFDDirectory.TAG_SUBSECOND_TIME_DIGITIZED, "DATE.SUBIFD.SUBSECOND_TIME_DIGITIZED"));
-		excluded_tags.add(new CustomTag(GpsDirectory.class, GpsDirectory.TAG_DATE_STAMP, "DATE.GPS.STAMP"));
+//		excluded_tags.add(new CustomTag(QuickTimeDirectory.class, QuickTimeDirectory.TAG_CREATION_TIME, "[QuickTime] [TAG_CREATION_TIME]"));
+//		excluded_tags.add(new CustomTag(QuickTimeDirectory.class, QuickTimeDirectory.TAG_MODIFICATION_TIME, "[QuickTime] [TAG_MODIFICATION_TIME]"));
+//		excluded_tags.add(new CustomTag(QuickTimeVideoDirectory.class, QuickTimeVideoDirectory.TAG_CREATION_TIME, "[QuickTime Video] [TAG_CREATION_TIME]"));
+//		excluded_tags.add(new CustomTag(QuickTimeVideoDirectory.class, QuickTimeVideoDirectory.TAG_MODIFICATION_TIME, "[QuickTime Video] [TAG_MODIFICATION_TIME]"));
+//		excluded_tags.add(new CustomTag(QuickTimeSoundDirectory.class, QuickTimeSoundDirectory.TAG_CREATION_TIME, "[QuickTime Sound] [TAG_CREATION_TIME]"));
+//		excluded_tags.add(new CustomTag(QuickTimeSoundDirectory.class, QuickTimeSoundDirectory.TAG_MODIFICATION_TIME, "[QuickTime Sound] [TAG_MODIFICATION_TIME]"));
 	}
 
 	public static Date get(final Metadata metadata) throws MetadataException {
