@@ -25,6 +25,8 @@ import com.drew.imaging.FileType;
 import com.drew.imaging.FileTypeDetector;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.imaging.bmp.BmpMetadataReader;
+import com.drew.imaging.gif.GifMetadataReader;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.imaging.mp4.Mp4MetadataReader;
 import com.drew.metadata.Metadata;
@@ -40,8 +42,8 @@ import com.lmartel54.easy.metadata.OriginalDate;
 public class FileOrganizer {
 
 	private static final boolean DUMP_METADATA = false;
-//	private static final String WORKING_FOLDER = "C:\\incubator";
-	private static final String WORKING_FOLDER = "\\\\home\\photos";
+	private static final String WORKING_FOLDER = "C:\\incubator";
+//	private static final String WORKING_FOLDER = "\\\\home\\photos";
 
 	private static final AtomicLong found = new AtomicLong(0);
 	private static final AtomicLong success = new AtomicLong(0);
@@ -49,8 +51,8 @@ public class FileOrganizer {
 	private static final AtomicLong unexpectedError = new AtomicLong(0);
 	private static final Logger logger = LoggerFactory.getLogger(FileOrganizer.class);
 
-	private static final String FAKE_DIRECTORY = ""; // "2019";
-	private static final String FAKE_NAME = ""; // "2019-08";
+	private static final String FAKE_DIRECTORY = "2006"; // "2005";
+	private static final String FAKE_NAME = "2006-11"; // "2005-11-26";
 
 	public static void main(String[] args) throws Exception {
 
@@ -152,6 +154,10 @@ public class FileOrganizer {
 			switch (fileType) {
 			case Jpeg:
 				return JpegMetadataReader.readMetadata(path.toFile());
+			case Bmp:
+				return BmpMetadataReader.readMetadata(path.toFile());
+			case Gif:
+				return GifMetadataReader.readMetadata(path.toFile());
 			case Mp4:
 				return Mp4MetadataReader.readMetadata(path.toFile());
 			case QuickTime:

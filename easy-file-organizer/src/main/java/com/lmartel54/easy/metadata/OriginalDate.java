@@ -55,7 +55,12 @@ public final class OriginalDate {
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME, "[Exif SubIFD] [TAG_DATETIME]"));
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME_ORIGINAL, "[Exif SubIFD] [TAG_DATETIME_ORIGINAL]"));
 		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_DATETIME_DIGITIZED, "[Exif SubIFD] [TAG_DATETIME_DIGITIZED]"));
-		tags.add(new CustomTag(IccDirectory.class, IccDirectory.TAG_PROFILE_DATETIME, "DATE.ICC.PROFILE_DATETIME"));
+		tags.add(new CustomTag(ExifSubIFDDirectory.class, ExifIFD0Directory.TAG_BODY_SERIAL_NUMBER, "[Exif SubIFD] [TAG_BODY_SERIAL_NUMBER]"));
+		tags.add(new CustomTag(IccDirectory.class, IccDirectory.TAG_PROFILE_DATETIME, "DATE.ICC.TAG_PROFILE_DATETIME"));
+		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DATE_CREATED, "DATE.IPTC.TAG_DATE_CREATED"));
+		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_TIME_CREATED, "DATE.IPTC.TAG_TIME_CREATED"));
+		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DIGITAL_DATE_CREATED, "DATE.IPTC.TAG_DIGITAL_DATE_CREATED"));
+		tags.add(new CustomTag(IptcDirectory.class, IptcDirectory.TAG_DIGITAL_TIME_CREATED, "DATE.IPTC.TAG_DIGITAL_TIME_CREATED"));
 		tags.add(new CustomTag(FileSystemDirectory.class, FileSystemDirectory.TAG_FILE_MODIFIED_DATE, "[File] [TAG_FILE_MODIFIED_DATE]"));
 		// [MP4]
 		tags.add(new CustomTag(Mp4Directory.class, Mp4Directory.TAG_CREATION_TIME, "[MP4] [TAG_CREATION_TIME]"));
